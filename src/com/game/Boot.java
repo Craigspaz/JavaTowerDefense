@@ -1,6 +1,6 @@
 package com.game;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
@@ -16,8 +16,11 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 
-import java.util.Random;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import org.lwjgl.LWJGLException;
@@ -25,8 +28,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.opengl.ImageIOImageData;
 
-public class Boot {
+public class Boot{
 	
 	private static State state = State.INTRO;
 	private static int width,height;
@@ -42,16 +46,23 @@ public class Boot {
 	public static boolean gameover = false;
 	public static boolean waveStarted = false;
 	public static int c = 0;
-
-    public static void main(String[] args) {
-        try {
+	public static boolean EnemyInSpawn = false;
+  
+    
+    public static void game(){
+    	try {
         	DisplayMode display = new DisplayMode(1200,900);
             Display.setDisplayMode(display);
-            Display.setTitle("Tower Defense 0.1.0");
+            Display.setTitle("Tower Defense 0.2.2");
+            try {
+				Display.setIcon(new ByteBuffer[] {
+				        new ImageIOImageData().imageToByteBuffer(ImageIO.read(new File("res/logo.png")), false, false, null),
+				        new ImageIOImageData().imageToByteBuffer(ImageIO.read(new File("res/logo.png")), false, false, null)
+				        });
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
             Display.setResizable(false);
-            if(Display.wasResized()){
-            	display = new DisplayMode(Display.getWidth(),Display.getHeight());
-            }
             width = Display.getWidth();
             height = Display.getHeight();
             Display.create();
@@ -60,7 +71,6 @@ public class Boot {
             Display.destroy();
             System.exit(1);
         }
-
         // Initialization code OpenGL
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -69,7 +79,6 @@ public class Boot {
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Textures textures = new Textures();
         try {
 			Mouse.create();
 		} catch (LWJGLException e) {
@@ -80,7 +89,11 @@ public class Boot {
         BlockType type = new BlockType();
         Player player = new Player();
         GFX.drawString();
+        Textures textures = new Textures();
         while (!Display.isCloseRequested()) {
+        	if(Display.wasResized()){
+        		glViewport(0,0,Display.getWidth(),Display.getHeight());
+        	}
             // Render
             glClear(GL_COLOR_BUFFER_BIT);
             glLoadIdentity();
@@ -91,6 +104,7 @@ public class Boot {
             if(state == State.INTRO){
             	Textures.grass.bind();
             	GFX.drawRect(Display.getWidth(),Display.getHeight(),0,0, Textures.dirt);
+            	GFX.font2.drawString(Display.getWidth()/2 - 128, Display.getHeight()/2, "Press Enter to continue!");
             	if(Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
             		state = State.MAIN_MENU;
             	}
@@ -118,42 +132,7 @@ public class Boot {
             	
             	//System.out.println(Mousex + " " + Mousey);
             
-            }else if(state == State.GAME){
-//            	//Draw Map Grid y
-//            	GFX.drawLine(Display.getWidth()/16,0,Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(2 * Display.getWidth()/16,0,2 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(3 * Display.getWidth()/16,0,3 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(4 * Display.getWidth()/16,0,4 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(5 * Display.getWidth()/16,0,5 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(6 * Display.getWidth()/16,0,6 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(7 * Display.getWidth()/16,0,7 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(8 * Display.getWidth()/16,0,8 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(9 * Display.getWidth()/16,0,9 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(10 * Display.getWidth()/16,0,10 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(11 * Display.getWidth()/16,0,11 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(12 * Display.getWidth()/16,0,12 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(13 * Display.getWidth()/16,0,13 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(14 * Display.getWidth()/16,0,14 * Display.getWidth()/16,Display.getHeight());
-//            	GFX.drawLine(15 * Display.getWidth()/16,0,15 * Display.getWidth()/16,Display.getHeight());
-//            	
-//            	//Draw Map Grid y
-//            	
-//            	GFX.drawLine(0,Display.getHeight()/16,Display.getWidth(),Display.getHeight()/16);
-//            	GFX.drawLine(0,2 * Display.getHeight()/16,Display.getWidth(),2 * Display.getHeight()/16);
-//            	GFX.drawLine(0,3 * Display.getHeight()/16,Display.getWidth(),3 * Display.getHeight()/16);
-//            	GFX.drawLine(0,4 * Display.getHeight()/16,Display.getWidth(),4 * Display.getHeight()/16);
-//            	GFX.drawLine(0,5 * Display.getHeight()/16,Display.getWidth(),5 * Display.getHeight()/16);
-//            	GFX.drawLine(0,6 * Display.getHeight()/16,Display.getWidth(),6 * Display.getHeight()/16);
-//            	GFX.drawLine(0,7 * Display.getHeight()/16,Display.getWidth(),7 * Display.getHeight()/16);
-//            	GFX.drawLine(0,8 * Display.getHeight()/16,Display.getWidth(),8 * Display.getHeight()/16);
-//            	GFX.drawLine(0,9 * Display.getHeight()/16,Display.getWidth(),9 * Display.getHeight()/16);
-//            	GFX.drawLine(0,10 * Display.getHeight()/16,Display.getWidth(),10 * Display.getHeight()/16);
-//            	GFX.drawLine(0,11 * Display.getHeight()/16,Display.getWidth(),11 * Display.getHeight()/16);
-//            	GFX.drawLine(0,12 * Display.getHeight()/16,Display.getWidth(),12 * Display.getHeight()/16);
-//            	GFX.drawLine(0,13 * Display.getHeight()/16,Display.getWidth(),13 * Display.getHeight()/16);
-//            	GFX.drawLine(0,14 * Display.getHeight()/16,Display.getWidth(),14 * Display.getHeight()/16);
-//            	GFX.drawLine(0,15 * Display.getHeight()/16,Display.getWidth(),15 * Display.getHeight()/16);
-            	
+            }else if(state == State.GAME){            	
             	for(Block block: Block.blocks){
             		block.draw();
             	}
@@ -183,6 +162,48 @@ public class Boot {
             				e.y = Block.GetBlock((int)(e.x)/32,(int)(e.y)/32).y;
             				if(e.getType() == BlockType.Enemy1){
             					player.health--;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy2){
+            					player.health-=2;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy3){
+            					player.health-=3;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy4){
+            					player.health-=4;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy5){
+            					player.health-=5;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy6){
+            					player.health-=6;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy7){
+            					player.health-=7;
+            					if(player.health <= 0){
+            						player.health = 0;
+            					}
+            				}
+            				if(e.getType() == BlockType.Enemy8){
+            					player.health-=8;
             					if(player.health <= 0){
             						player.health = 0;
             					}
@@ -243,24 +264,85 @@ public class Boot {
 //            	}
             	glPushMatrix();
         		GFX.drawRect(32, 32, 1050, 200, Textures.Tower1);
+        		GFX.font2.drawString(1050 + 32, 200+30, "10");
+        		
+        		GFX.drawRect(32, 32, 1050, 200 + 100,Textures.Tower2);
+        		GFX.font2.drawString(1050 + 32, 200 + 130, "30");
+        		
+        		GFX.drawRect(32, 32, 1050, 200 + 200,Textures.Tower3);
+        		GFX.font2.drawString(1050 + 32, 200 + 230, "100");
+        		
+        		GFX.drawRect(32, 32, 1050, 200+300,Textures.Tower4);
+        		GFX.font2.drawString(1050 + 32, 200 + 330, "1000");
+        		
+        		GFX.drawRect(32, 32, 1050, 200 + 430, Textures.Trash);
         		glPopMatrix();
         		
         		
-        		if(Mousex > 1050 && Mousex < 1050 + 32 && Mousey > 200 && Mousey < Mousey + 32){
+        		if(Mousex > 1050 && Mousex < 1050 + 32 && Mousey > 200 && Mousey < 200 + 32){
         			if(Mouse.isButtonDown(0)){
         				itemSelected = true;
         				Tower.isTower1Selected = true;
         				Mouse.updateCursor();
+        				System.out.println("Tower1");
         			}
         		}
-        		if(itemSelected){
+        		if(Mousex > 1050 && Mousex < 1050 + 32 && Mousey > 200+100 && Mousey < 300 + 32){
+        			if(Mouse.isButtonDown(0)){
+        				itemSelected = true;
+        				Tower.isTower2Selected = true;
+        				Mouse.updateCursor();
+        				System.out.println("Tower2");
+        			}
+        		}
+        		if(Mousex > 1050 && Mousex < 1050 + 32 && Mousey > 200 + 200 && Mousey < 200 + 200 + 32){
+        			if(Mouse.isButtonDown(0)){
+        				itemSelected = true;
+        				Tower.isTower3Selected = true;
+        				Mouse.updateCursor();
+        				System.out.println("Tower3");
+        			}
+        		}
+        		if(Mousex > 1050 && Mousex < 1050 + 32 && Mousey > 200 + 300 && Mousey < 200 + 300 + 32){
+        			if(Mouse.isButtonDown(0)){
+        				itemSelected = true;
+        				Tower.isTower4Selected = true;
+        				Mouse.updateCursor();
+        				System.out.println("Tower4");
+        			}
+        		}
+        		
+        		
+        		if(itemSelected && Tower.isTower1Selected){
         			glPushMatrix();
             		GFX.drawRect(32, 32, Mousex, Mousey, Textures.Tower1);
             		glPopMatrix();
         		}
+        		if(itemSelected && Tower.isTower2Selected){
+        			glPushMatrix();
+            		GFX.drawRect(32, 32, Mousex, Mousey, Textures.Tower2);
+            		glPopMatrix();
+        		}
+        		if(itemSelected && Tower.isTower3Selected){
+        			glPushMatrix();
+            		GFX.drawRect(32, 32, Mousex, Mousey, Textures.Tower3);
+            		glPopMatrix();
+        		}
+        		if(itemSelected && Tower.isTower4Selected){
+        			glPushMatrix();
+            		GFX.drawRect(32, 32, Mousex, Mousey, Textures.Tower4);
+            		glPopMatrix();
+        		}
         		if(itemSelected){
         			if(Mouse.isButtonDown(1)){
-        				if(Mousex/32 >= 32 || Mousey/32 >= 22 || Mousex/32 < 0 || Mousey/32 < 0 || Block.GetBlock(Mousex/32, Mousey/32).getType() != BlockType.grass || Tower.getTower(Mousex/32, Mousey/32) != null){
+        				
+        				if(Mousex > 1050 && Mousex < 1050 + 32 && Mousey > 200+430 && Mousey < 200+430+32){
+        					Tower.isTower1Selected = false;
+        					Tower.isTower2Selected = false;
+        					Tower.isTower3Selected = false;
+        					Tower.isTower4Selected = false;
+        					itemSelected = false;
+        				}else if(Mousex/32 >= 32 || Mousey/32 >= 22 || Mousex/32 < 0 || Mousey/32 < 0 || Block.GetBlock(Mousex/32, Mousey/32).getType() != BlockType.grass || Tower.getTower(Mousex/32, Mousey/32) != null){
         					JOptionPane.showMessageDialog(Display.getParent(), "You cannot place a tower there!");
         				}else{
         					if(Tower.isTower1Selected && player.money >= Price.T1_Cost){
@@ -268,6 +350,27 @@ public class Boot {
         						Tower.ts[Mousex/32][Mousey/32] =(new Tower1(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
         						player.money -= Price.T1_Cost;
         						Tower.isTower1Selected = false;
+        						itemSelected = false;
+        					}else
+        					if(Tower.isTower2Selected && player.money >= Price.T2_Cost){
+        						Tower.towers.add(new Tower2(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
+        						Tower.ts[Mousex/32][Mousey/32] =(new Tower2(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
+        						player.money -= Price.T2_Cost;
+        						Tower.isTower2Selected = false;
+        						itemSelected = false;
+        					}else
+        					if(Tower.isTower3Selected && player.money >= Price.T3_Cost){
+        						Tower.towers.add(new Tower3(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
+        						Tower.ts[Mousex/32][Mousey/32] =(new Tower3(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
+        						player.money -= Price.T3_Cost;
+        						Tower.isTower3Selected = false;
+        						itemSelected = false;
+        					}else
+        					if(Tower.isTower4Selected && player.money >= Price.T4_Cost){
+        						Tower.towers.add(new Tower4(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
+        						Tower.ts[Mousex/32][Mousey/32] =(new Tower4(Block.GetBlock(Mousex/32, Mousey/32).x,Block.GetBlock(Mousex/32,Mousey/32).y));
+        						player.money -= Price.T4_Cost;
+        						Tower.isTower4Selected = false;
         						itemSelected = false;
         					}
         				}
@@ -278,25 +381,39 @@ public class Boot {
         		}
         		
         		
+        		
         		//Test Wave
         		if(waveStarted){
         			int temp = Waves.wave.size();
         			if(c < temp){
-		        		if(counter == 30){
+		        		if(counter == 30 && !EnemyInSpawn){
 		        			Enemy e = Waves.wave.get(c);
 		        			Enemy.enemies.add(e);
 		        			System.out.println("Enemy added");
 		        			counter = 0;
 		        			c++;
+		        			EnemyInSpawn = true;
 		        		}
+		        		if(EnemyInSpawn){
+		        			Enemy e = Waves.wave.get(c);
+	            			if(e.x > 32){
+	            				EnemyInSpawn = false;
+	            				System.out.println("Enemy add aborted");
+	            			}
+	            		}
 		        		counter++;
         			}else{
         				System.out.println("Wave Ended!");
         				waveStarted = false;
         				c = 0;
         				counter = 0;
+        				Waves.wave.clear();
         			}
         		}
+        		
+        		
+        		
+        	
         		
         		
         		glPushMatrix();
@@ -304,6 +421,9 @@ public class Boot {
         		glPopMatrix();
         		glPushMatrix();
         		GFX.font2.drawString(Display.getWidth()-175, 30, "Money: " + player.money);
+        		glPopMatrix();
+        		glPushMatrix();
+        		GFX.font2.drawString(Display.getWidth()-175, 90, "Wave: " + Waves.waveNum);
         		glPopMatrix();
         		
         		glPushMatrix();
@@ -313,10 +433,43 @@ public class Boot {
             		GFX.drawRect(32, 32, Display.getWidth()-175, 60, Textures.Play1);
             		//System.out.println("Mouse over button play");
             		if(Mouse.isButtonDown(0)){
-            			new Waves(5);
-            			waveStarted = true;
-            			Waves.start();
-            			counter = 0;
+            			if(Waves.waveNum+1 == 1){
+            				new Waves(5);
+							Waves.generateWave1();
+            				waveStarted = true;
+                			Waves.waveNum++;
+                			counter = 0;
+                			c = 0;
+            			}else if(Waves.waveNum + 1 > 1 && Waves.waveNum < 10){
+            				new Waves(30 * (Waves.waveNum + 1) - 20);
+            				waveStarted = true;
+                			Waves.waveNum++;
+                			Waves.generateWave1_10();
+                			counter = 0;
+                			c = 0;
+            			}else if(Waves.waveNum >= 10 && Waves.waveNum < 50){
+            				new Waves(30 * (Waves.waveNum + 1) - 20);
+            				waveStarted = true;
+                			Waves.waveNum++;
+                			Waves.generateWave10_50();
+                			counter = 0;
+                			c = 0;
+            			}else if(Waves.waveNum >= 50 && Waves.waveNum < 70){
+            				new Waves(30 * (Waves.waveNum + 1) - 20);
+            				waveStarted = true;
+                			Waves.waveNum++;
+                			Waves.generateWave50_70();
+                			counter = 0;
+                			c = 0;
+            			}else{
+            				new Waves(30 * (Waves.waveNum + 1) - 20);
+            				waveStarted = true;
+                			Waves.waveNum++;
+                			Waves.generateWave90();
+                			counter = 0;
+                			c = 0;
+            			}
+            			
             			try {
 							Thread.sleep(500);
 						} catch (InterruptedException e1) {
@@ -345,7 +498,7 @@ public class Boot {
         		
         		for(Enemy e : Enemy.enemies){
         			for(Tower tower : Tower.towers){
-        				if(tower.x - 5 * 32 < e.x && tower.x + 5 * 32 > e.x && tower.y - 5 * 32 < e.y && tower.y + 5  * 32 > e.y && !tower.lockedOn){
+        				if(tower.x - tower.radius * 32 < e.x && tower.x + tower.radius * 32 > e.x && tower.y - tower.radius * 32 < e.y && tower.y + tower.radius  * 32 > e.y && !tower.lockedOn){
         					tower.lockedOn = true;
         					tower.drawLaser(e.x, e.y);
         					//System.out.println("Laser!!!!");
@@ -357,6 +510,32 @@ public class Boot {
         					tower.lockedOn = false;
         				}
         			}
+        		}
+        		
+        		for(Tower tower : Tower.towers){
+        			if(Mousex > tower.x && Mousex < tower.x + 32 && Mousey > tower.y && Mousey < tower.y + 32){
+        				if(Mouse.isButtonDown(0) && !Tower.globalSelected){
+        					//System.out.println("Tower Upgrades!");
+        					tower.settowerForUpgradeisSelected(true, tower);
+        					Tower.globalSelected = true;
+        				}else if(Mouse.isButtonDown(0) && Tower.globalSelected){
+        					for(Tower t : Tower.towers){
+        						t.settowerForUpgradeisSelected(false, t);
+        						//System.out.println("Tower Upgrades!");
+            					tower.settowerForUpgradeisSelected(true, tower);
+            					Tower.globalSelected = true;
+            					//System.out.println("Tower2");
+        					}
+        					
+        				}
+        			}
+        			
+        			if(tower.gettowerForUpgradeisSelected() && Tower.globalSelected){
+        				tower.towerUpgrades(player,Mousex,Mousey);
+        				tower.Range(player,Mousex,Mousey);
+        				tower.Damage(player, Mousex, Mousey);
+        			}
+        			
         		}
         		
             }else if(state == State.INGAME){
@@ -406,5 +585,9 @@ public class Boot {
         }
         Display.destroy();
         System.exit(0);
+    }
+    
+    public static void main(String[] args) {
+        game();
     }
 }

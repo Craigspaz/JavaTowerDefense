@@ -22,6 +22,14 @@ public abstract class Enemy {
 		return destroyed;
 	}
 	
+	public static Enemy getEnemy(int x, int y){
+		return enemys[x][y];
+	}
+	
+	public static Enemy getEnemy(Enemy e){
+		return e;
+	}
+	
 	public void setDestroyed(boolean destroyed){
 		this.destroyed = destroyed;
 	}

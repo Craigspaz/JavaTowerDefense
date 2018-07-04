@@ -14,9 +14,11 @@ public abstract class Tower {
 	boolean isSelected = false;
 	boolean isPlaced = false;
 	boolean enemyInRange = false;
-	public static boolean isTower1Selected = false;
+	public static boolean isTower1Selected = false, isTower2Selected = false, isTower3Selected = false, isTower4Selected = false;
 	int damage;
 	boolean lockedOn = false;
+	boolean towerForUpgradeisSelected = false;
+	public static boolean globalSelected = false;
 	
 	public static ArrayList<Tower> towers = new ArrayList<Tower>();
 	public static Tower[][] ts = new Tower[32][22];
@@ -32,9 +34,19 @@ public abstract class Tower {
 		return y;
 	}
 	
+	public boolean gettowerForUpgradeisSelected(){
+		return towerForUpgradeisSelected;
+	}
+	
+	public static void settowerForUpgradeisSelected(boolean a,Tower e){
+		e.towerForUpgradeisSelected = a;
+	}
+	
 	public boolean getEnemyInRange(){
 		return enemyInRange;
 	}
+	
+	public abstract void towerUpgrades(Player player,int Mousex, int Mousey);
 	
 	public boolean getlockedOn(){
 		return lockedOn;
@@ -81,5 +93,7 @@ public abstract class Tower {
 	
 	public abstract void draw();
 	public abstract void drawLaser(float x, float y);
+	public abstract void Range(Player player,int Mousex, int Mousey);
+	public abstract void Damage(Player player, int Mousex, int Mousey);
 
 }

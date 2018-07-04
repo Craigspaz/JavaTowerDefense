@@ -11,12 +11,12 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Craig/Desktop/lwjgl-2.9.1/native/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/ToPlayWithLater/Code/Programming/0.1.0/OpenGl TowerDefense/lwjgl-2.9.1/Slick-Util/lwjgl.jar">
+	<classpathentry kind="lib" path="res"/>
+	<classpathentry kind="lib" path="lwjgl-2.9.1/Slick-Util/lwjgl.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="OpenGl TowerDefense/lwjgl-2.9.1/native/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/ToPlayWithLater/Code/Programming/0.1.0/OpenGl TowerDefense/lwjgl-2.9.1/Slick-Util/slick-util.jar"/>
-	<classpathentry kind="lib" path="res"/>
+	<classpathentry kind="lib" path="lwjgl-2.9.1/Slick-Util/slick-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

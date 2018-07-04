@@ -5,20 +5,20 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-public class Tower1 extends Tower{
+public class Tower4 extends Tower{
 	
 
-	public Tower1(int x, int y) {
+	public Tower4(int x, int y) {
 		super(x, y);
-		radius = 3;
-		type = BlockType.Tower1;
-		cost = 10;
-		damage = Damage.Tower1Damage;
+		radius = 5;
+		type = BlockType.Tower4;
+		cost = 1000;
+		damage = Damage.Tower4Damage;
 	}
 	
 	public void draw(){
 		glPushMatrix();
-		GFX.drawRect(32, 32, x, y, Textures.Tower1);
+		GFX.drawRect(32, 32, x, y, Textures.Tower4);
 		glPopMatrix();
 	}
 
@@ -38,12 +38,12 @@ public class Tower1 extends Tower{
 	}
 	
 	public void Range(Player player,int Mousex, int Mousey){
-		if(player.money >= Price.T1_Range_Upgrade){
+		if(player.money >= Price.T4_Range_Upgrade){
 			if(Mouse.isButtonDown(0)){
 				if(Mousex > 32 && Mousex < 32 + 256 && Mousey > Display.getHeight()-6*32 && Mousey < Display.getHeight()-6*32+256){
 					if(radius < 10){
 						radius++;
-						player.money-=Price.T1_Range_Upgrade;
+						player.money-=Price.T4_Range_Upgrade;
 					}
 					
 				}
@@ -58,12 +58,12 @@ public class Tower1 extends Tower{
 	}
 	
 	public void Damage(Player player,int Mousex, int Mousey){
-		if(player.money >= Price.T1_Damage_Upgrade){
+		if(player.money >= Price.T4_Damage_Upgrade){
 			if(Mouse.isButtonDown(0)){
 				if(Mousex > 32+520 && Mousex < 32 + 520 + 256 && Mousey > Display.getHeight()-6*32 && Mousey < Display.getHeight()-6*32 + 256){
-					if(Damage.Tower1Damage < 20){
-						Damage.Tower1Damage++;
-						player.money-=Price.T1_Damage_Upgrade;
+					if(Damage.Tower4Damage < 20){
+						Damage.Tower4Damage++;
+						player.money-=Price.T4_Damage_Upgrade;
 					}
 					
 				}

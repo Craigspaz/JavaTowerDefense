@@ -1,15 +1,31 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.game;
+ 
+/**
+ *
+ * @author Craig
+ */
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 
 import java.awt.Font;
 import java.io.InputStream;
 
-import org.lwjgl.opengl.Display;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.ResourceLoader;
-
-import static org.lwjgl.opengl.GL11.*;
 
 
 public class GFX {
@@ -465,4 +481,154 @@ public class GFX {
 			e.printStackTrace();
 		}	
 	}
+        
+    public void draw(){
+    	
+    }
+	
+        public static void drawCubeFromCorner(float xx, float yy, float zz,Texture texture){
+			texture.bind();
+			//glLoadIdentity();
+			//glTranslatef(xx,yy,zz);
+			glPushMatrix();
+			glBegin(GL_QUADS);
+			//Front Face
+				glTexCoord2f(0,0);
+				glVertex3f(xx,yy + 1,zz);
+				glTexCoord2f(0,1);
+				glVertex3f(xx,yy,zz);
+				glTexCoord2f(1,1);
+				glVertex3f(xx + 1,yy,zz);
+				glTexCoord2f(1,0);
+				glVertex3f(xx + 1,yy + 1,zz);
+			//Left Face
+				glTexCoord2f(0,0);
+				glVertex3f(xx,yy + 1,zz + 1);
+				glTexCoord2f(0,1);
+				glVertex3f(xx,yy,zz + 1);
+				glTexCoord2f(1,1);
+				glVertex3f(xx,yy,zz);
+				glTexCoord2f(1,0);
+				glVertex3f(xx,yy + 1,zz);
+			//Right Face
+				glTexCoord2f(0,0);
+				glVertex3f(xx + 1,yy + 1,zz);
+				glTexCoord2f(0,1);
+				glVertex3f(xx + 1,yy,zz);
+				glTexCoord2f(1,1);
+				glVertex3f(xx + 1,yy,zz + 1);
+				glTexCoord2f(1,0);
+				glVertex3f(xx + 1,yy + 1,zz + 1);
+			//Back Face
+				glTexCoord2f(0,0);
+				glVertex3f(xx + 1,yy + 1,zz + 1);
+				glTexCoord2f(0,1);
+				glVertex3f(xx + 1,yy,zz + 1);
+				glTexCoord2f(1,1);
+				glVertex3f(xx,yy,zz + 1);
+				glTexCoord2f(1,0);
+				glVertex3f(xx,yy + 1,zz + 1);
+			//Top Face
+				glTexCoord2f(0,0);
+				glVertex3f(xx,yy + 1,zz + 1);
+				glTexCoord2f(0,1);
+				glVertex3f(xx,yy + 1,zz);
+				glTexCoord2f(1,1);
+				glVertex3f(xx + 1,yy + 1,zz);
+				glTexCoord2f(1,0);
+				glVertex3f(xx + 1,yy + 1,zz + 1);
+			//Bottom Face
+				glTexCoord2f(0,0);
+				glVertex3f(xx,yy,zz + 1);
+				glTexCoord2f(0,1);
+				glVertex3f(xx,yy,zz);
+				glTexCoord2f(1,1);
+				glVertex3f(xx + 1,yy,zz);
+				glTexCoord2f(1,0);
+				glVertex3f(xx + 1,yy,zz + 1);
+			glEnd();
+		glPopMatrix();
+	}
+
+        
+        public static void drawGrass(float xx, float yy, float zz,Texture texture,Texture top,Texture bottom){
+        	texture.bind();
+    		//glLoadIdentity();
+    		//glTranslatef(xx,yy,zz);
+    		glPushMatrix();
+    		glBegin(GL_QUADS);
+    		//Front Face
+			glTexCoord2f(0,0);
+			glVertex3f(xx,yy + 1,zz);
+			glTexCoord2f(0,1);
+			glVertex3f(xx,yy,zz);
+			glTexCoord2f(1,1);
+			glVertex3f(xx + 1,yy,zz);
+			glTexCoord2f(1,0);
+			glVertex3f(xx + 1,yy + 1,zz);
+			//Back Face
+			glTexCoord2f(0,0);
+			glVertex3f(xx + 1,yy + 1,zz + 1);
+			glTexCoord2f(0,1);
+			glVertex3f(xx + 1,yy,zz + 1);
+			glTexCoord2f(1,1);
+			glVertex3f(xx,yy,zz + 1);
+			glTexCoord2f(1,0);
+			glVertex3f(xx,yy + 1,zz + 1);
+			//Left Face
+			glTexCoord2f(0,0);
+			glVertex3f(xx,yy + 1,zz + 1);
+			glTexCoord2f(0,1);
+			glVertex3f(xx,yy,zz + 1);
+			glTexCoord2f(1,1);
+			glVertex3f(xx,yy,zz);
+			glTexCoord2f(1,0);
+			glVertex3f(xx,yy + 1,zz);
+			//Right Face
+			glTexCoord2f(0,0);
+			glVertex3f(xx + 1,yy + 1,zz);
+			glTexCoord2f(0,1);
+			glVertex3f(xx + 1,yy,zz);
+			glTexCoord2f(1,1);
+			glVertex3f(xx + 1,yy,zz + 1);
+			glTexCoord2f(1,0);
+			glVertex3f(xx + 1,yy + 1,zz + 1);
+    		glEnd();
+    	glPopMatrix();
+    	
+    	
+    	//glLoadIdentity();
+    	//glPushMatrix();
+    	//glBindTexture(GL_TEXTURE_2D, top.getTextureID());
+    	top.bind();
+    	glBegin(GL_QUADS);
+    	//Top Face
+		glTexCoord2f(0,0);
+		glVertex3f(xx,yy + 1,zz + 1);
+		glTexCoord2f(0,1);
+		glVertex3f(xx,yy + 1,zz);
+		glTexCoord2f(1,1);
+		glVertex3f(xx + 1,yy + 1,zz);
+		glTexCoord2f(1,0);
+		glVertex3f(xx + 1,yy + 1,zz + 1);
+    	glEnd();
+    	
+    	
+    	//Bottom Face
+    	//glColor3f(.75f,.05f,.05f);
+    	bottom.bind();
+    	glBegin(GL_QUADS);
+    	//Bottom Face
+		glTexCoord2f(0,0);
+		glVertex3f(xx,yy,zz + 1);
+		glTexCoord2f(0,1);
+		glVertex3f(xx,yy,zz);
+		glTexCoord2f(1,1);
+		glVertex3f(xx + 1,yy,zz);
+		glTexCoord2f(1,0);
+		glVertex3f(xx + 1,yy,zz + 1);
+    	glEnd();
+    	//glPopMatrix();
+    	//glLoadIdentity();
+        }
 }
